@@ -16,13 +16,13 @@ After completing this lesson, you will be able to:
 You will be better equipped to work through this lesson if you have experience in and familiarity with:
 
 *   Basic knowledge of PHP and HTML
-*   Basic knowledge of [installing and activating WordPress themes](https://make.wordpress.org/training/handbook/user-lessons/choosing-and-installing-a-theme/)
-*   Understanding of the [Template Hierarchy](https://make.wordpress.org/training/handbook/theme-school/template-hierarchy/)
+*   Basic knowledge of [installing and activating WordPress themes](https://make.wordpress.org/training/handbook/lesson-plans/user-lessons/choosing-and-installing-a-theme/)
+*   Understanding of the [Template Hierarchy](https://make.wordpress.org/training/handbook/lesson-plans/theme-school/template-hierarchy/)
 *   Ability to edit files with a text editor
 
 ## Assets
 
-*   [Twenty Fourteen Theme](https://wordpress.org/themes/twentyfourteen "Twenty Fourteen Theme Download")
+*   [Twenty Fourteen Theme](https://wordpress.org/themes/twentyfourteen "Twenty Fourteen Theme")
 *   [Child Theme of Twenty Fourteen](http://codex.wordpress.org/Child_Themes "Instructions for Creating a Child Theme")
 
 ## Screening Questions
@@ -66,15 +66,28 @@ You are looking to insert text on blog posts only, so you need to look for the `
 
 #### Step 2: Determine where in the template file you want the text block to appear when the conditional tag is evaluated.
 
-You want to insert text above the blog post, so open the `single.php` file: [html] <?php /**
+You want to insert text above the blog post, so open the `single.php` file: 
 
-*   The Template for displaying all single posts
+```PHP
+<?php
+/**
+ * The Template for displaying all single posts
+ *
+ * @package WordPress
+ * @subpackage Twenty_Fourteen
+ * @since Twenty Fourteen 1.0
+ */
 
-*   @package WordPress
-*   @subpackage Twenty_Fourteen
-*   @since Twenty Fourteen 1.0
+get_header(); ?>
 
-*/ get_header(); ?> <div id="primary" class="content-area"> <div id="content" class="site-content" role="main"> <?php // Start the Loop. while ( have_posts() ) : the_post(); [/html] You should insert the conditional test after the opening #content div, but before the `while (have posts() ) : the_post()` statement.
+	<div id="primary" class="content-area">
+		<div id="content" class="site-content" role="main">
+		<?php
+			// Start the Loop.
+			while ( have_posts() ) : the_post();
+```
+
+You should insert the conditional test after the opening #content div, but before the `while (have posts() ) : the_post()` statement.
 
 #### Step 3: Insert the Conditional Tag in the appropriate area you have chosen.
 
@@ -100,17 +113,84 @@ Since you are changing the structure of the header on your site, you are going
 
 #### Step 2: Determine where in the template file you need to place the conditional tag for evaluation.
 
-You want to evaluate your condition around the div that holds the header image, so open the `header.php` file: [html] <?php /**
+You want to evaluate your condition around the div that holds the header image, so open the `header.php` file:
 
-*   The Header for our theme
+```PHP
+<?php
+/**
+ * The Header for our theme
+ *
+ * Displays all of the <head> section and everything up till <div id="main">
+ *
+ * @package WordPress
+ * @subpackage Twenty_Fourteen
+ * @since Twenty Fourteen 1.0
+ */
+?><!DOCTYPE html>
+<!--[if IE 7]>
+<html class="ie ie7" <?php language_attributes(); ?>>
+<![endif]-->
+<!--[if IE 8]>
+<html class="ie ie8" <?php language_attributes(); ?>>
+<![endif]-->
+<!--[if !(IE 7) & !(IE 8)]><!-->
+<html <?php language_attributes(); ?>>
+<!--<![endif]-->
+<head>
+	<meta charset="<?php bloginfo( 'charset' ); ?>">
+	<meta name="viewport" content="width=device-width">
+	<title><?php wp_title( '|', true, 'right' ); ?></title>
+	<link rel="profile" href="http://gmpg.org/xfn/11">
+	<link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>">
+	<!--[if lt IE 9]>
+	<script src="<?php echo get_template_directory_uri(); ?>/js/html5.js"></script>
+	<![endif]-->
+	<?php wp_head(); ?>
+</head>
 
-*   Displays all of the <head> section and everything up till <div id="main">
+<body <?php body_class(); ?>>
+<div id="page" class="hfeed site">
+	<?php if ( get_header_image() ) : ?>
+	<div id="site-header">
+		<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
+			<img src="<?php header_image(); ?>" width="<?php echo get_custom_header()->width; ?>" height="<?php echo get_custom_header()->height; ?>" alt="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>">
+		</a>
+	</div>
+	<?php endif; ?>
 
-*   @package WordPress
-*   @subpackage Twenty_Fourteen
-*   @since Twenty Fourteen 1.0
+	<header id="masthead" class="site-header" role="banner">
+		<div class="header-main">
+			<h1 class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></h1>
 
-*/ ?><!DOCTYPE html> <!--[if IE 7]> <html class="ie ie7" <?php language_attributes(); ?>> <![endif]--> <!--[if IE 8]> <html class="ie ie8" <?php language_attributes(); ?>> <![endif]--> <!--[if !(IE 7) & !(IE 8)]><!--> <html <?php language_attributes(); ?>> <!--<![endif]--> <head> <meta charset="<?php bloginfo( 'charset' ); ?>"> <meta name="viewport" content="width=device-width"> <title><?php wp_title( '|', true, 'right' ); ?></title> <link rel="profile" href="http://gmpg.org/xfn/11"> <link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>"> <!--[if lt IE 9]> <script src="<?php echo get_template_directory_uri(); ?>/js/html5.js"></script> <![endif]--> <?php wp_head(); ?> </head> <body <?php body_class(); ?>> <div id="page" class="hfeed site"> <?php if ( get_header_image() ) : ?> <div id="site-header"> <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"> <img src="<?php header_image(); ?>" width="<?php echo get_custom_header()->width; ?>" height="<?php echo get_custom_header()->height; ?>" alt=""> </a> </div> <?php endif; ?> <header id="masthead" class="site-header" role="banner"> <div class="header-main"> <h1 class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></h1> <div class="search-toggle"> <a href="#search-container" class="screen-reader-text"><?php _e( 'Search', 'twentyfourteen' ); ?></a> </div> <nav id="primary-navigation" class="site-navigation primary-navigation" role="navigation"> <button class="menu-toggle"><?php _e( 'Primary Menu', 'twentyfourteen' ); ?></button> <a class="screen-reader-text skip-link" href="#content"><?php _e( 'Skip to content', 'twentyfourteen' ); ?></a> <?php wp_nav_menu( array( 'theme_location' => 'primary', 'menu_class' => 'nav-menu' ) ); ?> </nav> </div> <div id="search-container" class="search-box-wrapper hide"> <div class="search-box"> <?php get_search_form(); ?> </div> </div> </header><!-- #masthead --> <div id="main" class="site-main"> [/html] You want the header image to only appear on the front page of your website, so you will need to place the conditional statement under the div with the ID of "page" and the class of "hfeed" and "site" in the `header.php` template file.
+			<div class="search-toggle">
+				<a href="#search-container" class="screen-reader-text" aria-expanded="false" aria-controls="search-container"><?php _e( 'Search', 'twentyfourteen' ); ?></a>
+			</div>
+
+			<nav id="primary-navigation" class="site-navigation primary-navigation" role="navigation">
+				<button class="menu-toggle"><?php _e( 'Primary Menu', 'twentyfourteen' ); ?></button>
+				<a class="screen-reader-text skip-link" href="#content"><?php _e( 'Skip to content', 'twentyfourteen' ); ?></a>
+				<?php
+				wp_nav_menu(
+					array(
+						'theme_location' => 'primary',
+						'menu_class'     => 'nav-menu'
+					)
+				);
+				?>
+			</nav>
+		</div>
+
+		<div id="search-container" class="search-box-wrapper hide">
+			<div class="search-box">
+				<?php get_search_form(); ?>
+			</div>
+		</div>
+	</header><!-- #masthead -->
+
+	<div id="main" class="site-main">
+``` 
+
+You want the header image to only appear on the front page of your website, so you will need to place the conditional statement under the div with the ID of "page" and the class of "hfeed" and "site" in the `header.php` template file.
 
 #### Step 3: Insert the Conditional Tag in the appropriate area you have chosen.
 
@@ -158,7 +238,7 @@ Conditional tags are a simple way to check for specific conditions, as a true or
 3.  Display your posts on the front page of your site
 4.  Display a different title on the "Ground Beef" category archive page
 
-**Answer:** 3\. Display your posts on the front page of your site
+**Answer:** 3. Display your posts on the front page of your site
 
 * * *
 
@@ -169,7 +249,7 @@ Conditional tags are a simple way to check for specific conditions, as a true or
 3.  MET / NOT MET
 4.  TRUE / NULL
 
-**Answer:** 2\. TRUE / FALSE
+**Answer:** 2. TRUE / FALSE
 
 * * *
 
@@ -181,7 +261,7 @@ Conditional tags are a simple way to check for specific conditions, as a true or
 4.  The Post Array `is_single( array( 22, 'fudge-brownies', 'Fudge Brownies' )`
 5.  All of the above
 
-**Answer:** 5\. All of the above
+**Answer:** 5. All of the above
 
 * * *
 
@@ -192,7 +272,7 @@ Conditional tags are a simple way to check for specific conditions, as a true or
 3.  Then statement
 4.  If statement
 
-**Answer:** 4\. If statement
+**Answer:** 4. If statement
 
 ## Additional Resources
 
